@@ -76,7 +76,7 @@
                     inputElement.val(sum);
                 }
                 else {
-                    //we are in a straight = formula. split on operators ([/\+\/\-\*/])
+                    //we are in a straight = formula. split on operators (/[\+\/\-\*]/)
                 }
             }
         }
@@ -85,7 +85,7 @@
             $.ajax({
                 type: 'POST',
                 url: 'SaveSpreadsheet.asmx/HelloWorld',
-                data: "{'whatDoesJesseSuck':'Big Balls'}",
+                data: "{'name':'value'}",
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 success: function()

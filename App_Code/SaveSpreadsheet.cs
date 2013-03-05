@@ -22,11 +22,11 @@ public class SaveSpreadsheet : System.Web.Services.WebService {
 
     [WebMethod]
     [ScriptMethod(ResponseFormat=ResponseFormat.Json,UseHttpGet=false)]
-    public void HelloWorld(string whatDoesJesseSuck)
+    public void HelloWorld(string name)
     {
         using (System.IO.StreamWriter file = new System.IO.StreamWriter(@"C:\_Development\WriteLines2.txt"))
         {
-            file.WriteLine("Jesse Sucks " + whatDoesJesseSuck);
+            file.WriteLine(name);
         }
         return;
     }
