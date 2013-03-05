@@ -42,7 +42,12 @@
 
         function calculateCellValue(inputElement) {
             var val = inputElement.val();
-            if (val == "" || val == 'undefined' || val === undefined) return; //dont go beyond this if the cell is empty
+            if (val == "" || val == 'undefined' || val === undefined) {
+                if (inputElement.data('formula') != "" && inputElement.data('formula') != undefined && inputElement.data('formula') != 'undefined') {
+                   inputElement.data('formula', ''); //if the cell content is empty, reset the formula if there is one (aka you deleted the cell contents)
+                }
+                return; //dont go beyond this if the cell is empty
+            }
             if (val[0] == '=') {
                 inputElement.data('formula', val.toUpperCase());
             }
@@ -143,8 +148,9 @@
             }
             $('.formula-sum').on('click', function () {
                 var leCell = $('.selected');
-                leCell.val('=' + leCell.val());
+                leCell.val('=SUM(' + leCell.val() +')');
                 updateFormulaBar(leCell.val());
+                leCell.data('formula', leCell.val());
             });
             $('.formula-bar-text').on('focusout', function () {
                 var leCell = $('.selected');
