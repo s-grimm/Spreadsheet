@@ -1,0 +1,28 @@
+﻿.spreadsheet {
+    
+}
+.spreadsheet table {
+    
+}
+.spreadsheet tbody {
+}
+.spreadsheet table tr {
+    margin: 0;
+    padding: 0;
+}
+.spreadsheet table tr td {
+    min-width: 75px;
+    margin: 0;
+    padding: 0;
+}
+.spreadsheet table tr td input {
+    margin: 0;
+    padding: 0;
+}
+.spreadsheet input {
+    width: 100%;
+}
+
+.spreadsheet input .selected {
+    background-color: lightblue;
+}
