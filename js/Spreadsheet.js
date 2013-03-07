@@ -85,8 +85,7 @@
                         }
                     }
                     inputElement.val(sum);
-                }
-                else {
+                } else {
                     //we are in a straight = formula. split on operators (/[\+\/\-\*]/)
                 }
             }
@@ -108,6 +107,16 @@
             }
             //calculation of this cells formula is complete, update the rest of the table
             recalculateAllCells();
+        }
+
+        function clearAllCells() {
+            $('.spreadsheet-input-cell').each(function () {
+                var $this = $(this);
+                if ($this.data('formula') != "" && $this.data('formula') != undefined && $this.data('formula') != 'undefined') {
+                    $this.data('formula', '');
+                }
+                $this.val('');
+            });
         }
 
         function postShit() {
