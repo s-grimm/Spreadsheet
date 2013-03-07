@@ -147,8 +147,9 @@
             var $this = $(this);
             $this.addClass('spreadsheet');
             //icon-fullscreen
-            var $formulaBar = $('<div class="input-prepend input-append span12"><div class="btn-group"><button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-list-alt"></i><span class="caret"></span></button><ul class="dropdown-menu"><li><a class="formula-sum">Sum</a></li></ul></div><input type="text" class="span6 formula-bar-text"/><a class="btn btn-link-to-cell"><i class="icon-edit"></i></a></div>');
+            var $formulaBar = $('<div class="input-prepend input-append span12"><div class="btn-group"><button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-list-alt"></i><span class="caret"></span></button><ul class="dropdown-menu"><li><a class="formula-sum">Sum</a></li></ul></div><input type="text" class="span6 formula-bar-text"/><div class="btn-group"><button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-edit"></i><span class="caret"></span></button><ul class="dropdown-menu"><li><a class="btn-clear-spreadsheet">Clear</a></li><li><a class="btn-load-spreadsheet">Load</a></li><li><a class="btn-save-spreadsheet">Save</a></li></ul></div></div>');
             $this.append($formulaBar);
+            $this.append('<br />'); //fix for styling in firefox
 
             var $table = $('<table>');
             //do shit here
