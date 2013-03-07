@@ -9,7 +9,7 @@
                 return labelCode(r - 1) + '' + String.fromCharCode(65 + (i % 26));
             }
         }
-        
+
         function decodeLabel(ch) {
             if (ch.length == 1) {
                 return ch.charCodeAt(0) - 64; //offset to 64 because index of columns does not start at 0
@@ -17,7 +17,7 @@
                 return ((ch.charCodeAt(0) - 64) * 26) + decodeLabel(ch.substr(1));
             }
         }
-        
+
         function updateSelectedCell(cellRef) {
             var $formulabar = $('.formula-bar-text');
             cellRef.val($formulabar.val());
@@ -26,7 +26,7 @@
             var $formulabar = $('.formula-bar-text');
             $formulabar.val(text);
         }
-        
+
         function getCellValueFromCoordinates(xPos, yPos) {
             var row = $('.spreadsheet tbody tr').eq(yPos);
             var cell = row.children('td').eq(decodeLabel(xPos) - 1);
@@ -40,17 +40,22 @@
             var val = getCellValueFromCoordinates(items[0], items[1]);
         }
 
+        function recalculateAllCells() {
+            $('.spreadsheet-input-cell').each(function () {
+                var $this = $(this);
+                if ($this.data('formula') != "" && $this.data('formula') != undefined && $this.data('formula') != 'undefined') {
+                    var oldVal = $this.val();
+                    calculateCellValue($this);
+                    var newVal = $this.val();
+                    if (oldVal != newVal) {
+                        recalculateAllCells();
+                    }
+                }
+            });
+        }
+
         function calculateCellValue(inputElement) {
             var val = inputElement.val();
-            if (val == "" || val == 'undefined' || val === undefined) {
-                if (inputElement.data('formula') != "" && inputElement.data('formula') != undefined && inputElement.data('formula') != 'undefined') {
-                   inputElement.data('formula', ''); //if the cell content is empty, reset the formula if there is one (aka you deleted the cell contents)
-                }
-                return; //dont go beyond this if the cell is empty
-            }
-            if (val[0] == '=') {
-                inputElement.data('formula', val.toUpperCase());
-            }
             if (inputElement.data('formula') != "" && inputElement.data('formula') != undefined && inputElement.data('formula') != 'undefined') {
                 val = inputElement.data('formula');
                 if (val.match(/\=[Ss][Uu][Mm]/)) {
@@ -61,14 +66,14 @@
                     val = val.replace(/\(/, '');
                     val = val.trim();
                     values = val.split(':');
-                    
+
                     for (var i = 0; i < values.length; ++i) {
                         values[i] = values[i].trim(); //remove any whitespace before and after this
                         values[i] = values[i].match(/(\D+)(\d+)/).slice(1);
                     }
                     var sum = 0;
 
-                    var lowerCol = decodeLabel(values[0][0]) < decodeLabel(values[1][0]) ? decodeLabel(values[0][0]) : decodeLabel(values[1][0]) ;
+                    var lowerCol = decodeLabel(values[0][0]) < decodeLabel(values[1][0]) ? decodeLabel(values[0][0]) : decodeLabel(values[1][0]);
                     var higherCol = decodeLabel(values[0][0]) > decodeLabel(values[1][0]) ? decodeLabel(values[0][0]) : decodeLabel(values[1][0]);
 
                     var lowerRow = values[0][1] < values[1][1] ? values[0][1] : values[1][1];
@@ -86,6 +91,24 @@
             }
         }
 
+        function cellLostFocus(inputElement) {
+            var val = inputElement.val();
+            if (val == "" || val == 'undefined' || val === undefined) {
+                if (inputElement.data('formula') != "" && inputElement.data('formula') != undefined && inputElement.data('formula') != 'undefined') {
+                    inputElement.data('formula', ''); //if the cell content is empty, reset the formula if there is one (aka you deleted the cell contents)
+                }
+                return; //dont go beyond this if the cell is empty
+            }
+            if (val[0] == '=') {
+                inputElement.data('formula', val.toUpperCase());
+            }
+            if (inputElement.data('formula') != "" && inputElement.data('formula') != undefined && inputElement.data('formula') != 'undefined') {
+                calculateCellValue(inputElement);
+            }
+            //calculation of this cells formula is complete, update the rest of the table
+            recalculateAllCells();
+        }
+
         function postShit() {
             $.ajax({
                 type: 'POST',
@@ -93,8 +116,7 @@
                 data: "{'name':'value'}",
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
-                success: function()
-                {
+                success: function () {
                     alert('WOOT');
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
@@ -123,16 +145,14 @@
             $this.append($table);
 
             {
-               
                 var $rowHeader = $('<tr><th class="corner-cell"></th></tr>');
 
                 $table.append($rowHeader);
-              
+
                 for (var i = 0; i < settings.columns; ++i) {
                     //String.fromCharCode
                     var $th = $('<th>' + labelCode(i) + '</th>');
                     $rowHeader.append($th);
-                    
                 }
             }//end rowheader scope
 
@@ -148,7 +168,7 @@
             }
             $('.formula-sum').on('click', function () {
                 var leCell = $('.selected');
-                leCell.val('=SUM(' + leCell.val() +')');
+                leCell.val('=SUM(' + leCell.val() + ')');
                 updateFormulaBar(leCell.val());
                 leCell.data('formula', leCell.val());
             });
@@ -194,7 +214,7 @@
                 });
             }).on('focusout', function () {
                 var leCell = $('.selected');
-                calculateCellValue(leCell);
+                cellLostFocus(leCell);
             });
         });
     };
