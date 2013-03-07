@@ -119,11 +119,13 @@
             });
         }
 
+        //rename this...
         function postShit() {
+            var whatToPass = ($('.spreadsheet-table'));
             $.ajax({
                 type: 'POST',
                 url: 'SaveSpreadsheet.asmx/HelloWorld',
-                data: "{'name':'value'}",
+                data: "{'name':'" + whatToPass + "'}",
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 success: function () {
@@ -151,21 +153,16 @@
             $this.append($formulaBar);
             $this.append('<br />'); //fix for styling in firefox
 
-            var $table = $('<table>');
-            //do shit here
+            var $table = $('<table class="spreadsheet-table">');
             $this.append($table);
 
-            {
-                var $rowHeader = $('<tr><th class="corner-cell"></th></tr>');
-
-                $table.append($rowHeader);
-
-                for (var i = 0; i < settings.columns; ++i) {
-                    //String.fromCharCode
-                    var $th = $('<th>' + labelCode(i) + '</th>');
-                    $rowHeader.append($th);
-                }
-            }//end rowheader scope
+            var $rowHeader = $('<tr><th class="corner-cell"></th></tr>');
+            $table.append($rowHeader);
+            for (var i = 0; i < settings.columns; ++i) {
+                //String.fromCharCode
+                var $th = $('<th>' + labelCode(i) + '</th>');
+                $rowHeader.append($th);
+            }
 
             for (var rCount = 1; rCount <= settings.rows; rCount++) {
                 var $row = $('<tr>');
@@ -177,16 +174,27 @@
                     $col.append('<input type="text" class="spreadsheet-input-cell"/>');
                 }
             }
+
             $('.formula-sum').on('click', function () {
                 var leCell = $('.selected');
                 leCell.val('=SUM(' + leCell.val() + ')');
                 updateFormulaBar(leCell.val());
                 leCell.data('formula', leCell.val());
             });
+
+            $('.btn-clear-spreadsheet').on('click', function () {
+                clearAllCells();
+            });
+
+            $('.btn-save-spreadsheet').on('click', function () {
+                postShit();
+            });
+
             $('.formula-bar-text').on('focusout', function () {
                 var leCell = $('.selected');
                 calculateCellValue(leCell);
             });
+
             $('.spreadsheet-input-cell').on('click', function () {
                 $('.selected').removeClass('selected').css('background-color', 'white');
                 var $selected = $(this);
