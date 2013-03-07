@@ -121,7 +121,27 @@
 
         //rename this...
         function postShit() {
-            var whatToPass = ($('.spreadsheet-table'));
+            var whatToStringify = new Array();
+            whatToStringify[0] = 10;
+            whatToStringify[1] = 20;
+            var counter = 0;
+            var col = 0;
+            // whatToStringify[3][counter][col]
+            $('.spreadsheet-table tr').each(function () { 
+                var $this = $(this);
+                $this.children('input').each(function () {
+                    var $this = $(this);
+                    if ($this.data('formula') != "" && $this.data('formula') != undefined && $this.data('formula') != 'undefined') {
+                        whatToStringify[3][counter][col][1] = $this.data('formula');
+                    }
+                    whatToStringify[3][counter][col][0]=$this.val();
+                    col++;
+                });
+                col = 0;
+                counter++;
+            });
+
+            var whatToPass = JSON.stringify(whatToStringify);
             $.ajax({
                 type: 'POST',
                 url: 'SaveSpreadsheet.asmx/HelloWorld',
