@@ -22,6 +22,7 @@
             var $formulabar = $('.formula-bar-text');
             cellRef.val($formulabar.val());
         }
+
         function updateFormulaBar(text) {
             var $formulabar = $('.formula-bar-text');
             $formulabar.val(text);
@@ -72,12 +73,12 @@
                         values[i] = values[i].match(/(\D+)(\d+)/).slice(1);
                     }
                     var sum = 0;
-
+                    //calculate highest and lowest cell ranges
                     var lowerCol = decodeLabel(values[0][0]) < decodeLabel(values[1][0]) ? decodeLabel(values[0][0]) : decodeLabel(values[1][0]);
                     var higherCol = decodeLabel(values[0][0]) > decodeLabel(values[1][0]) ? decodeLabel(values[0][0]) : decodeLabel(values[1][0]);
-
                     var lowerRow = values[0][1] < values[1][1] ? values[0][1] : values[1][1];
                     var higherRow = values[0][1] > values[1][1] ? values[0][1] : values[1][1]
+                    //sum them
                     for (var i = lowerRow; i <= higherRow; ++i) {
                         for (var x = lowerCol; x <= higherCol; ++x) {
                             sum += parseInt(getCellValueFromCoordinates(labelCode(x - 1), i));
@@ -183,8 +184,7 @@
                 var leCell = $('.selected');
                 if (leCell.data('formula') == "" || leCell.data('formula') == undefined || leCell.data('formula') == 'undefined') {
                     updateFormulaBar(leCell.val());
-                }
-                else {
+                } else {
                     updateFormulaBar(leCell.data('formula'));
                     updateSelectedCell(leCell);
                 }
