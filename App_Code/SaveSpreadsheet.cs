@@ -8,7 +8,7 @@ using System.Web.Services;
 /// <summary>
 /// Summary description for SaveSpreadsheet
 /// </summary>
-[WebService(Namespace = "http://localhost:56091/SpreadsheetApplication")]
+[WebService(Namespace = "http://localhost:61070/SpreadsheetApplication")]
 [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
 // To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line. 
 [System.Web.Script.Services.ScriptService]

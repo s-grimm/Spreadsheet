@@ -1,5 +1,12 @@
 ﻿(function ($) {
     $.fn.Spreadsheet = function (options) {
+        //settings for spreadsheet app
+        var settings = $.extend(
+            {
+                'columns': 10,
+                'rows': 20,
+            }, options);
+
         function labelCode(i) { //make i 0 based (ie 0 = A, 1 = B, 25 = Z, 26 = AA)
             var r = parseInt((i / 26), 10);
             if (r == 0) {
@@ -121,31 +128,40 @@
 
         //rename this...
         function postShit() {
-            var whatToStringify = new Array();
-            whatToStringify[0] = 10;
-            whatToStringify[1] = 20;
+            var jsonCells = "{";
             var counter = 0;
             var col = 0;
+
+            var isFirst = true;
             // whatToStringify[3][counter][col]
-            $('.spreadsheet-table tr').each(function () { 
+            $('.spreadsheet-table tr').each(function () {
                 var $this = $(this);
+                
                 $this.children('input').each(function () {
-                    var $this = $(this);
-                    if ($this.data('formula') != "" && $this.data('formula') != undefined && $this.data('formula') != 'undefined') {
-                        whatToStringify[3][counter][col][1] = $this.data('formula');
+                    if(!isFirst){
+                        jsonCells += ","
+                    }else{
+                        isFirst = false;
                     }
-                    whatToStringify[3][counter][col][0]=$this.val();
+                    var $this = $(this);
+                    var cellPrefix = labelCode(col);
+                    if ($this.data('formula') != "" && $this.data('formula') != undefined && $this.data('formula') != 'undefined') {
+                        jsonCells += "'"+cellPrefix+counter+"':'" + $this.data('formula') + "'";
+                    } else {
+                        jsonCells += "'" + cellPrefix + counter + "':'" + $this.val() + "'";
+                    }
                     col++;
                 });
                 col = 0;
                 counter++;
             });
+            jsonCells += "}";
+            var saveValue = "{ 'rows':'" + settings.rows + "', 'columns':'" + settings.columns + "' , cells:" + jsonCells + " }";
 
-            var whatToPass = JSON.stringify(whatToStringify);
             $.ajax({
                 type: 'POST',
                 url: 'SaveSpreadsheet.asmx/HelloWorld',
-                data: "{'name':'" + whatToPass + "'}",
+                data: "{'name':'" + saveValue + "'}",
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 success: function () {
@@ -156,13 +172,6 @@
                 }
             });
         }
-
-        //settings for spreadsheet app
-        var settings = $.extend(
-            {
-                'columns': 10,
-                'rows': 20,
-            }, options);
 
         return this.each(function () {
             //reference scope to local variable so you don't have to do scope it each time.
