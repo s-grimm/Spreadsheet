@@ -25,7 +25,6 @@
 </head>
 
 <body>
-     <!--Modal dialog for saving spreadsheets-->
     <div id="save-spreadsheet-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="saveModalLabel" aria-hidden="true">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
@@ -50,8 +49,6 @@
             <button class="btn btn-primary btn-save-spreadsheet">Save</button>
         </div>
     </div>
-
-    <!--Modal dialog for loading spreadsheets-->
     <div id="load-spreadsheet-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="loadModalLabel" aria-hidden="true">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
@@ -61,13 +58,13 @@
             <div class="control-group">
                 <select id="saved-list"></select>
                 <div id="alert-load-warning" class="alert" style="display: none;">
-                    <strong>Uh oh!</strong> You have to pick one from the list if you want to load it!
+                    <strong>Whoops!</strong> You need to select a file to load!
                 </div>
                 <div id="alert-load-list-failure" class="alert alert-error" style="display: none;">
-                    <strong>Uh oh!</strong> We couldn't load any saved files, please try again later.
+                    <strong>Whoops!</strong> I can't find any saved files in "C:\\Saves\\"!
                 </div>
                 <div id="alert-load-failure" class="alert alert-error" style="display: none;">
-                    <strong>Uh oh!</strong> Something went wrong, please try again later.
+                    <strong>Whoops!</strong> I broked the internet. Please try again later!
                 </div>
             </div>
         </div>

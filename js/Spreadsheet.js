@@ -126,7 +126,6 @@
             });
         }
 
-        //rename this...
         function saveMethod(saveName) {
             if (saveName == "" || saveName == undefined || saveName == "undefined")
             {
@@ -134,7 +133,6 @@
                 return;
             }
             var counter = 0;
-            // whatToStringify[3][counter][col]
             var obj = {
                 'columns': settings.columns,
                 'rows': settings.rows,
@@ -167,12 +165,77 @@
             });
         }
 
+        function populateListData() {
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: "SaveSpreadsheet.asmx/GetList",
+                dataType: "json",
+                success: function (response) {
+                    var savedFiles = [];
+                    savedFiles = jQuery.parseJSON(response.d);
+                    $('#saved-list').empty();
+                    $.each(savedFiles, function (key, name) {
+                        $('#saved-list').attr('size', savedFiles.length).append($('<option>', { value: name }).text(name));
+                    });
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    $('#alert-load-list-failure').show().delay(2000).fadeOut();
+                }
+            });
+        }
+
+        function loadFile() {
+            var fileName = $('#saved-list option:selected').val();
+            if (!fileName) {
+                $('#alert-load-warning').show().delay(2000).fadeOut();
+            } else {
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    url: "SaveSpreadsheet.asmx/Load",
+                    data: "{'fileName': '" + fileName + "'}",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.d) {
+                            var counter = 0;
+                            var obj = JSON.parse(response.d);
+                            var $this = $('.spreadsheet-table input').each(function () {
+                                var $this = $(this);
+                                $this.val(obj.cells[counter].value);
+                                if ($this.val()[0] == "=") {
+                                    $this.data('formula', $this.val()); //set the data-formula attribute to the formula
+                                }
+                                   
+                                counter++;
+                            });
+                            $('#load-spreadsheet-modal').modal('toggle');
+                            recalculateAllCells();//recalculate with new values in them
+                        }
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        $('#alert-load-failure').show().delay(2000).fadeOut();
+                    }
+                });
+            }
+        }
+
         return this.each(function () {
             //reference scope to local variable so you don't have to do scope it each time.
             var $this = $(this);
             $this.addClass('spreadsheet');
             //icon-fullscreen
-            var $formulaBar = $('<div class="input-prepend input-append span12"><div class="btn-group"><button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-list-alt"></i><span class="caret"></span></button><ul class="dropdown-menu"><li><a class="formula-sum">Sum</a></li></ul></div><input type="text" class="span6 formula-bar-text"/><div class="btn-group"><button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-edit"></i><span class="caret"></span></button><ul class="dropdown-menu"><li><a class="btn-clear-spreadsheet">Clear</a></li><li><a class="btn-load-spreadsheet">Load</a></li><li><a href="#save-spreadsheet-modal" data-toggle="modal">Save</a></li></ul></div></div>');
+            var $formulaBar = $('<div class="input-prepend input-append span12">'+
+                '<div class="btn-group"><button class="btn dropdown-toggle" data-toggle="dropdown">' +
+                '<i class="icon-list-alt"></i><span class="caret"></span></button><ul class="dropdown-menu"><li>' +
+                '<a class="formula-sum">Sum</a></li></ul></div><input type="text" class="span6 formula-bar-text"/>' +
+                '<div class="btn-group"><button class="btn dropdown-toggle" data-toggle="dropdown">' +
+                '<i class="icon-edit"></i><span class="caret"></span></button>' +
+                '<ul class="dropdown-menu">' +
+                '<li><a class="btn-clear-spreadsheet">Clear</a></li>' +
+                '<li><a class="btn-load-spreadsheet" href="#load-spreadsheet-modal" data-toggle="modal">Load</a></li>' +
+                '<li><a href="#save-spreadsheet-modal" data-toggle="modal">Save</a></li>' +
+                '</ul></div></div>');
             $this.append($formulaBar);
             $this.append('<br />'); //fix for styling in firefox
 
@@ -216,6 +279,13 @@
             $('.formula-bar-text').on('focusout', function () {
                 var leCell = $('.selected');
                 calculateCellValue(leCell);
+            });
+
+            $('.btn-load-spreadsheet').on('click', function () {
+                populateListData();
+            });
+            $('#loadSpreadSheet').on('click', function () {
+                loadFile();
             });
 
             $('.spreadsheet-input-cell').on('click', function () {
