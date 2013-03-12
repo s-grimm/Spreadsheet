@@ -127,10 +127,13 @@
         }
 
         //rename this...
-        function postShit() {
-            var jsonCells = "{";
+        function saveMethod(saveName) {
+            if (saveName == "" || saveName == undefined || saveName == "undefined")
+            {
+                $('#alert-save-warning').show('slow').delay(2000).hide('slow');
+                return;
+            }
             var counter = 0;
-            var col = 0;
             // whatToStringify[3][counter][col]
             var obj = {
                 'columns': settings.columns,
@@ -139,7 +142,6 @@
             }
             var $this = $('.spreadsheet-table input').each(function () {
                 var $this = $(this);
-                var cellPrefix = labelCode(col);
                 var cellobj;
                 if ($this.data('formula') != "" && $this.data('formula') != undefined && $this.data('formula') != 'undefined') {
                     cellobj = { 'value': $this.data('formula') }
@@ -149,10 +151,7 @@
                 obj.cells[counter] = cellobj;
                 counter++;
             });
-            alert(JSON.stringify(obj));
-            var saveName = "Shane"
             var data = "{'name':'" + saveName + "', 'saveData':'" + JSON.stringify(obj) + "'}"
-            alert(data);
             $.ajax({
                 type: 'POST',
                 url: 'SaveSpreadsheet.asmx/Save',
@@ -160,10 +159,10 @@
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 success: function () {
-                    alert('WOOT');
+                    $('#save-spreadsheet-modal').modal('toggle');
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    alert('Error : ' + xhr.status + ' - ' + xhr.statusText + ' : ' + thrownError);
+                    $('#alert-save-failure').show('slow').delay(2000).hide('slow');
                 }
             });
         }
@@ -173,7 +172,7 @@
             var $this = $(this);
             $this.addClass('spreadsheet');
             //icon-fullscreen
-            var $formulaBar = $('<div class="input-prepend input-append span12"><div class="btn-group"><button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-list-alt"></i><span class="caret"></span></button><ul class="dropdown-menu"><li><a class="formula-sum">Sum</a></li></ul></div><input type="text" class="span6 formula-bar-text"/><div class="btn-group"><button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-edit"></i><span class="caret"></span></button><ul class="dropdown-menu"><li><a class="btn-clear-spreadsheet">Clear</a></li><li><a class="btn-load-spreadsheet">Load</a></li><li><a class="btn-save-spreadsheet">Save</a></li></ul></div></div>');
+            var $formulaBar = $('<div class="input-prepend input-append span12"><div class="btn-group"><button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-list-alt"></i><span class="caret"></span></button><ul class="dropdown-menu"><li><a class="formula-sum">Sum</a></li></ul></div><input type="text" class="span6 formula-bar-text"/><div class="btn-group"><button class="btn dropdown-toggle" data-toggle="dropdown"><i class="icon-edit"></i><span class="caret"></span></button><ul class="dropdown-menu"><li><a class="btn-clear-spreadsheet">Clear</a></li><li><a class="btn-load-spreadsheet">Load</a></li><li><a href="#save-spreadsheet-modal" data-toggle="modal">Save</a></li></ul></div></div>');
             $this.append($formulaBar);
             $this.append('<br />'); //fix for styling in firefox
 
@@ -211,7 +210,7 @@
             });
 
             $('.btn-save-spreadsheet').on('click', function () {
-                postShit();
+                saveMethod($('#txtSaveName').val());
             });
 
             $('.formula-bar-text').on('focusout', function () {

@@ -25,7 +25,57 @@
 </head>
 
 <body>
+     <!--Modal dialog for saving spreadsheets-->
+    <div id="save-spreadsheet-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="saveModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+            <h3 id="saveModalLabel">Save Spreadsheet</h3>
+        </div>
+        <div class="modal-body">
+            <div class="control-group">
+                <label class="control-label" for="inputSpreadSheetName">Name</label>
+                <div class="controls">
+                    <input type="text" id="txtSaveName" placeholder="Name" />
+                </div>
+                <div id="alert-save-warning" class="alert" style="display: none;">
+                    <strong>Whoops!</strong>A spreadsheet needs a name dude!
+                </div>
+                <div id="alert-save-failure" class="alert alert-error" style="display: none;">
+                    <strong>Whoops!</strong>I broked the internet. Please try again later!
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            <button class="btn btn-primary btn-save-spreadsheet">Save</button>
+        </div>
+    </div>
 
+    <!--Modal dialog for loading spreadsheets-->
+    <div id="load-spreadsheet-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="loadModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+            <h3 id="loadModalLabel">Load Spreadsheet</h3>
+        </div>
+        <div class="modal-body">
+            <div class="control-group">
+                <select id="saved-list"></select>
+                <div id="alert-load-warning" class="alert" style="display: none;">
+                    <strong>Uh oh!</strong> You have to pick one from the list if you want to load it!
+                </div>
+                <div id="alert-load-list-failure" class="alert alert-error" style="display: none;">
+                    <strong>Uh oh!</strong> We couldn't load any saved files, please try again later.
+                </div>
+                <div id="alert-load-failure" class="alert alert-error" style="display: none;">
+                    <strong>Uh oh!</strong> Something went wrong, please try again later.
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            <button id="loadSpreadSheet" class="btn btn-primary">Load</button>
+        </div>
+    </div>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container">
