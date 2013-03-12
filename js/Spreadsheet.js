@@ -131,37 +131,32 @@
             var jsonCells = "{";
             var counter = 0;
             var col = 0;
-
-            var isFirst = true;
             // whatToStringify[3][counter][col]
-            $('.spreadsheet-table tr').each(function () {
+            var obj = {
+                'columns': settings.columns,
+                'rows': settings.rows,
+                'cells': []
+            }
+            var $this = $('.spreadsheet-table input').each(function () {
                 var $this = $(this);
-                
-                $this.children('input').each(function () {
-                    if(!isFirst){
-                        jsonCells += ","
-                    }else{
-                        isFirst = false;
-                    }
-                    var $this = $(this);
-                    var cellPrefix = labelCode(col);
-                    if ($this.data('formula') != "" && $this.data('formula') != undefined && $this.data('formula') != 'undefined') {
-                        jsonCells += "'"+cellPrefix+counter+"':'" + $this.data('formula') + "'";
-                    } else {
-                        jsonCells += "'" + cellPrefix + counter + "':'" + $this.val() + "'";
-                    }
-                    col++;
-                });
-                col = 0;
+                var cellPrefix = labelCode(col);
+                var cellobj;
+                if ($this.data('formula') != "" && $this.data('formula') != undefined && $this.data('formula') != 'undefined') {
+                    cellobj = { 'value': $this.data('formula') }
+                } else {
+                    cellobj = { 'value': $this.val() }
+                }
+                obj.cells[counter] = cellobj;
                 counter++;
             });
-            jsonCells += "}";
-            var saveValue = "{ 'rows':'" + settings.rows + "', 'columns':'" + settings.columns + "' , cells:" + jsonCells + " }";
-
+            alert(JSON.stringify(obj));
+            var saveName = "Shane"
+            var data = "{'name':'" + saveName + "', 'saveData':'" + JSON.stringify(obj) + "'}"
+            alert(data);
             $.ajax({
                 type: 'POST',
-                url: 'SaveSpreadsheet.asmx/HelloWorld',
-                data: "{'name':'" + saveValue + "'}",
+                url: 'SaveSpreadsheet.asmx/Save',
+                data: data,
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 success: function () {

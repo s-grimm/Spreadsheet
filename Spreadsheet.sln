@@ -5,20 +5,21 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Spreadsheet", ".", "{98FBE9
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
 		Debug.AspNetCompiler.VirtualPath = "/Spreadsheet"
-		Debug.AspNetCompiler.PhysicalPath = "..\..\..\GitHub\Spreadsheet\"
+		Debug.AspNetCompiler.PhysicalPath = "..\Spreadsheet\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\Spreadsheet\"
 		Debug.AspNetCompiler.Updateable = "true"
 		Debug.AspNetCompiler.ForceOverwrite = "true"
 		Debug.AspNetCompiler.FixedNames = "false"
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.VirtualPath = "/Spreadsheet"
-		Release.AspNetCompiler.PhysicalPath = "..\..\..\GitHub\Spreadsheet\"
+		Release.AspNetCompiler.PhysicalPath = "..\Spreadsheet\"
 		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\Spreadsheet\"
 		Release.AspNetCompiler.Updateable = "true"
 		Release.AspNetCompiler.ForceOverwrite = "true"
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
 		VWDPort = "61070"
+		VWDDynamicPort = "false"
 	EndProjectSection
 EndProject
 Global
